@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>ZIM - Code Creativity</title>
+
+<!-- zimjs.com - JavaScript Canvas Framework -->
+<script type="module">
+
+import zim from "https://zimjs.org/cdn/016/zim";
+
+// See Docs under Frame for FIT, FILL, FULL, and TAG
+let frame = new Frame(FIT, 1024, 768, light, dark, ready);
+let stage = frame.stage;
+
+function ready() {
+    
+    // Define an array to store the musical notes or chords
+    let stage = frame.stage;
+    let stageWidth = frame.width;
+    let stageHeight = frame.height;
+
+    let selectedCards = [];
+    let selectedCovers = [];
+
+    let cards = [
+        { color: red, note: "C", scaleNumber: 1 }, // Add other properties as needed
+        { color: orange, note: "D", scaleNumber: 2 },
+        { color: yellow, note: "E", scaleNumber: 3 },
+        { color: green, note: "F", scaleNumber: 4 },
+        { color: blue, note: "G", scaleNumber: 5 },
+        { color: purple, note: "A", scaleNumber: 6 },
+        { color: pink, note: "B", scaleNumber: 7 },
+        { color: red, note: "c", scaleNumber: 8 },
+        { color: orange, note: "d", scaleNumber: 9 },
+        { color: yellow, note: "e", scaleNumber: 10 },
+        { color: green, note: "f", scaleNumber: 11 },
+        { color: blue, note: "g", scaleNumber: 12 },
+        { color: purple, note: "a", scaleNumber: 13 }
+        // Add more cards here
+    ];
+
+    let cardsBeginner = [];
+    for (let i = 0; i<7; i++){
+        cardsBeginner.push(cards[i]);
+    }
+        
+    
+
+    // Shuffle the cards array;
+    function shuffle(array) {
+        // Implementation of shuffle function (e.g., Fisher-Yates algorithm)
+    }
+
+    // Function to create and display the cards on the screen
+    function createCards() {
+        // Create card elements using zimjs
+        for (let i = 0; i < 25; i++){
+            
+
+            // Get a random index to select a card from the cards array
+            let randomIndex = Math.floor(Math.random() * cardsBeginner.length);
+            let randomCard = cardsBeginner[randomIndex];
+            zog(randomIndex);
+            zog(randomCard);
+
+           
+
+            let card = new Rectangle(90, 90, randomCard.color, black)
+                .pos(100*(i%5) + 100, 100 + (Math.floor(i/5))*100);
+                //.color(cards[i].color);
+
+
+             // Add Label for the note letter
+            let noteLabel = new Label(randomCard.note, 80, "Arial", "white")
+                .pos(100*(i%5) + 100 + 20, 100  + 10 + (Math.floor(i/5))*100);
+            
+            // Add event listeners to handle card clicks
+            card.on("click", function() {
+                cardClickHandler(cards[i]);
+            });
+
+            // Create covering shape (face-down state)
+            let cover = new Rectangle(90, 90, "gray")
+                .pos(100*(i%5) + 100, 100 + (Math.floor(i/5))*100);
+            
+            // Add event listener to cover to reveal the card temporarily
+            cover.on("click", function() {
+                if (selectedCards.length < 2) {
+                    selectedCards.push(randomCard);
+                    //zog(selectedCards[0]);
+                    selectedCovers.push(cover);
+                    zog("Cover clicked");
+                    cover.removeFrom(stage); // Remove cover when clicked
+                    zog("Cover removed");
+                //noteLabel.addTo(stage); // Add noteLabel (card) to stage temporarily
+                // setTimeout(function() {
+                //     //noteLabel.removeFrom(stage); // Remove card after a delay
+                //     cover.addTo(stage); // Restore cover after card is hidden
+                // }, 1); // Adjust the delay time as needed
+                // stage.update();
+                if (selectedCards.length == 2) {
+                    zog("selectedCards.length == 2");
+                    zog(selectedCards[0]);
+                    zog(selectedCards[1]);
+                    if (selectedCards[0].scaleNumber == selectedCards[1].scaleNumber) {
+                        zog(selectedCards[0].scaleNumber);
+                        zog(selectedCards[1].scaleNumber);
+                        zog("Match");
+                        zog(selectedCards[0]);
+                        zog(selectedCards[1]);
+                        //cardsBeginner[randomIndex];
+                        //card.removeFrom(stage);
+                        //selectedCards[0].removeFrom(stage);
+                        //selectedCards[1].removeFrom(stage);                      
+                    }
+                    else {
+                        zog("Not a match");
+                        selectedCovers[0].addTo(stage);
+                        selectedCovers[1].addTo(stage);             
+                    }
+                    selectedCovers = [];
+                    selectedCards = [];
+                }
+                stage.update();
+            }
+            } );
+            
+            // Add card and Label to the stage
+            stage.addChild(card, noteLabel, cover);
+        }
+        // Add event listeners to handle card clicks
+        stage.update();
+    }
+
+    // Function to handle card clicks
+    function cardClickHandler(card) {
+        // Show the properties of the clicked card
+        // Check if another card has already been clicked
+        // If yes, check if they match
+        // If they match, keep them revealed
+        // If they don't match, hide them again after a short delay
+    }
+
+    // Function to check if two cards match
+    function checkMatch(card1, card2) {
+        // Compare properties of the two cards (e.g., color, note, etc.)
+        // Return true if they match, false otherwise
+    }
+
+    // Function to check if the game is complete
+    function checkWin() {
+        // Check if all cards have been matched
+        // Display a congratulatory message if the game is complete
+    }
+
+    // Function to reset the game
+    function resetGame() {
+        // Reset any game variables
+        // Shuffle the cards array
+        // Recreate and display the cards on the screen
+    }
+
+    // Call the createCards function to initialize the game
+    createCards();
+
+        
+} // end ready
+
+</script>
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+</head>
+<body></body>
+</html>
