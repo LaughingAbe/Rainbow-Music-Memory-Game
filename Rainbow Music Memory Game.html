@@ -73,7 +73,8 @@ function ready() {
             // let noteLabel = new Label(randomCard.scaleNumber, 80, "Arial", "white")
             //     .pos(100*(i%6) + 100 + 20, 100  + 10 + (Math.floor(i/6))*100);
 
-                let option = 7;
+                let option =  zim.rand(1, 8);;
+                //let option = Math.random() < 0.5 ? 5 : 7;
                 let noteLabel = [];
 
                 switch(option){
@@ -114,12 +115,21 @@ function ready() {
                         zog("case 6");
                         noteLabel = new Label(randomCard.scaleNumber, 80, "Arial", randomCard.color)
                             .pos(100*(i%6) + 100 + 10, 100  + 10 + (Math.floor(i/6))*100);
+                        card.color = white;
                         break;
                     }
                     case 7: {
-                        zog("case 6");
+                        zog("case 7");
                         noteLabel = new Label(randomCard.scaleNumber, 80, "Arial", black)
                             .pos(100*(i%6) + 100 + 20, 100  + 10 + (Math.floor(i/6))*100);
+                        card.color = white;
+                        break;
+                    }
+                    case 8: {
+                        zog("case 8");
+                        noteLabel = new Circle(40, randomCard.color, "white")
+                            .pos(100*(i%6) + 100 + 5, 100  + 5 + (Math.floor(i/6))*100);
+                        card.color = black;
                         break;
                     }
                 }    
