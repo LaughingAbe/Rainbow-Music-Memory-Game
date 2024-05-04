@@ -20,8 +20,13 @@ function ready() {
     let stageWidth = frame.width;
     let stageHeight = frame.height;
 
+    let dealthCards = [];
+
+
+    // checking for matches variables
     let selectedCards = [];
     let selectedCovers = [];
+    let deck = [];
 
     let cards = [
         { color: red, note: "C", scaleNumber: 1 }, // Add other properties as needed
@@ -52,20 +57,109 @@ function ready() {
 
     // Function to create and display the cards on the screen
     function createCards() {
+        let tileRows = 4;
+        let tileColumns = 4;
+        deck = cardsBeginner;
+        let unmatched = Array(deck.length).fill(0); // Initialize array to track unmatched cards
+        //let unmatchedSum = 0;
+        let nextCardIndex = -1;
+        zog(unmatched + " unmatched");
+
+        // Function to check for unmatched cards and update nextCardIndex if needed
+        function checkUnmatched() {
+            // Keeps track of cards selected for each element
+            // Return array of unpaired cards
+            //unmatchedSum = 0;
+
+            zog(unmatched + " unmatched before");
+
+            for (let i = 0; i < unmatched.length; i++){
+                
+                if (unmatched[i] >= 2){
+                    unmatched[i] = 0;
+                }
+            }
+            zog(unmatched + " unmatched after");
+
+            let unmatchedSum = unmatched.reduce((sum, count) => sum + count, 0);
+            zog("unmatcheSum " + unmatchedSum);
+            if (unmatchedSum > (tileRows * tileColumns - dealthCards.length - 1)) {
+                zog("The next piece should be a pair");
+                zog(unmatched + " unmatched");
+                nextCardIndex = unmatched.findIndex(count => count === 1);
+                zog(nextCardIndex + " nextCardIndex");
+            }
+        }
+            
+            
+        //     for (let i = 0; i < unmatched.length; i++){
+
+        //         if (unmatched[i] >= 2){
+        //             unmatched[i] = 0;
+        //         }
+
+        //         zog(tileRows*tileColumns - dealthCards.length + "tiles left");
+        //         if (unmatchedSum > (tileRows*tileColumns - dealthCards.length)){
+        //             zog("The next piece should be a pair");
+        //             zog(unmatched + " unmatched");
+        //             for (let i = 0; i < deck.length; i++){
+        //                 if (unmatched[i] == 1){
+        //                     nextCardIndex = i;
+        //                     zog(nextCardIndex + " nextCardIndex");
+        //                     break;
+        //                 }
+        //             }
+        //         }
+
+        //         unmatchedSum += unmatched[i];
+        //     }
+        //     zog(unmatchedSum);
+
+        //     if (unmatchedSum > 4) {
+        //         zog("Causion, unmatchedSum > 4");
+        //     }
+        //     if (unmatchedSum > 7) {
+        //         zog("Error, unmatchedSum > 7");
+        //     }
+    
+        //     zog(unmatched);
+
+        // }
+
         // Create card elements using zimjs
-        for (let i = 0; i < 36; i++){
+        for (let i = 0; i < tileRows*tileColumns; i++){
+            checkUnmatched();
+            zog(i + "checkUnmatched");
             
 
             // Get a random index to select a card from the cards array
-            let randomIndex = Math.floor(Math.random() * cardsBeginner.length);
-            let randomCard = cardsBeginner[randomIndex];
-            zog(randomIndex);
-            zog(randomCard);
+            let randomIndex = Math.floor(Math.random() * deck.length);
+            zog(randomIndex + " randomIndex");
+
+            let randomCard = deck[randomIndex];
+            zog(randomCard + " RandomCard");
+
+            if (nextCardIndex != -1){
+                zog(nextCardIndex + " nextCardIndex")
+                randomCard = deck[nextCardIndex];
+                unmatched[nextCardIndex]++;
+                nextCardIndex = -1;     
+            }
+            
+            else {
+                unmatched[randomIndex]++;
+            }
+
+            dealthCards.push(randomCard);
+
+            zog(randomIndex + " randomIndex");
+            zog(randomCard + " randomCard");
 
            
             
             let card = new Rectangle(90, 90, randomCard.color, black)
-                .pos(100*(i%6) + 100, 100 + (Math.floor(i/6))*100);
+                .pos(100*(i%tileColumns) + 100, 100 + (Math.floor(i/tileRows))*100);
+                zog(i%tileColumns + "X y" + Math.floor(i/tileRows)  );
                 //.color(cards[i].color);
 
 
@@ -75,60 +169,60 @@ function ready() {
 
                 let option =  zim.rand(1, 8);;
                 //let option = Math.random() < 0.5 ? 5 : 7;
-                let noteLabel = [];
+                let noteLabel;
 
                 switch(option){
                     case 1: {
                         zog("case 1");
                         noteLabel = new Label(randomCard.note, 80, "Arial", "white")
-                            .pos(100*(i%6) + 100 + 20, 100  + 10 + (Math.floor(i/6))*100);
+                            .pos(100*(i%tileColumns) + 100 + 20, 100  + 10 + (Math.floor(i/tileRows))*100);
                         break;
                     }
                     case 2: {
                         zog("case 2");
                         noteLabel = new Label(randomCard.scaleNumber, 80, "Arial", "white")
-                            .pos(100*(i%6) + 100 + 10, 100  + 10 + (Math.floor(i/6))*100);
+                            .pos(100*(i%tileColumns) + 100 + 20, 100  + 10 + (Math.floor(i/tileRows))*100);
                         break;
                     }
                     case 3: {
                         zog("case 3");
                         noteLabel = new Circle(40, randomCard.color, "white")
-                            .pos(100*(i%6) + 100 + 5, 100  + 5 + (Math.floor(i/6))*100);
+                            .pos(100*(i%tileColumns) + 100 + 5, 100  + 5 + (Math.floor(i/tileRows))*100);
                         card.color = white;
                         break;
                     }
                     case 4: {
                         zog("case 4");
                         noteLabel = new Label(randomCard.note, 80, "Arial", randomCard.color)
-                            .pos(100*(i%6) + 100 + 20, 100  + 10 + (Math.floor(i/6))*100);
+                            .pos(100*(i%tileColumns) + 100 + 20, 100  + 10 + (Math.floor(i/tileRows))*100);
                         card.color = white;
                         break;
                     }
                     case 5: {
                         zog("case 5");
                         noteLabel = new Label(randomCard.note, 80, "Arial", black)
-                            .pos(100*(i%6) + 100 + 20, 100  + 10 + (Math.floor(i/6))*100);
+                            .pos(100*(i%tileColumns) + 100 + 20, 100  + 10 + (Math.floor(i/tileRows))*100);
                         card.color = white;
                         break;
                     }
                     case 6: {
                         zog("case 6");
                         noteLabel = new Label(randomCard.scaleNumber, 80, "Arial", randomCard.color)
-                            .pos(100*(i%6) + 100 + 10, 100  + 10 + (Math.floor(i/6))*100);
+                            .pos(100*(i%tileColumns) + 100 + 20, 100  + 10 + (Math.floor(i/tileRows))*100);
                         card.color = white;
                         break;
                     }
                     case 7: {
                         zog("case 7");
                         noteLabel = new Label(randomCard.scaleNumber, 80, "Arial", black)
-                            .pos(100*(i%6) + 100 + 20, 100  + 10 + (Math.floor(i/6))*100);
+                            .pos(100*(i%tileColumns) + 100 + 20, 100  + 10 + (Math.floor(i/tileRows))*100);
                         card.color = white;
                         break;
                     }
                     case 8: {
                         zog("case 8");
                         noteLabel = new Circle(40, randomCard.color, "white")
-                            .pos(100*(i%6) + 100 + 5, 100  + 5 + (Math.floor(i/6))*100);
+                            .pos(100*(i%tileColumns) + 100 + 5, 100  + 5 + (Math.floor(i/tileRows))*100);
                         card.color = black;
                         break;
                     }
@@ -141,7 +235,7 @@ function ready() {
 
             // Create covering shape (face-down state)
             let cover = new Rectangle(90, 90, "gray")
-                .pos(100*(i%6) + 100, 100 + (Math.floor(i/6))*100);
+                .pos(100*(i%tileColumns) + 100, 100 + (Math.floor(i/tileRows))*100);
             
             // Add event listener to cover to reveal the card temporarily
             cover.on("click", function() {
@@ -149,7 +243,7 @@ function ready() {
                     selectedCards.push(randomCard);
                     //zog(selectedCards[0]);
                     selectedCovers.push(cover);
-                    zog("Cover clicked");
+                    zog("Cover clicked: " + selectedCovers );
                     cover.removeFrom(stage); // Remove cover when clicked
                     zog("Cover removed");
                 //noteLabel.addTo(stage); // Add noteLabel (card) to stage temporarily
@@ -162,9 +256,10 @@ function ready() {
                     zog("selectedCards.length == 2");
                     zog(selectedCards[0]);
                     zog(selectedCards[1]);
-                    if (selectedCards[0].scaleNumber == selectedCards[1].scaleNumber) {
-                        zog(selectedCards[0].scaleNumber);
-                        zog(selectedCards[1].scaleNumber);
+                    if (selectedCards[0] == selectedCards[1]) {
+                    //if (selectedCards[0].scaleNumber == selectedCards[1].scaleNumber) {
+                        zog("selectedCards[0].scalenumber " + selectedCards[0].scaleNumber);
+                        zog("selectedCards[1].scalenumber " + selectedCards[1].scaleNumber);
                         zog("Match");
                         zog(selectedCards[0]);
                         zog(selectedCards[1]);
@@ -175,8 +270,17 @@ function ready() {
                     }
                     else {
                         zog("Not a match");
-                        selectedCovers[0].addTo(stage);
-                        selectedCovers[1].addTo(stage);             
+                        let intervalID = setTimeout(() => {
+                            zog(selectedCovers[0] + " selectedCovers[0]");
+                            zog(selectedCovers[1] + " selectedCovers[1]");
+                            if (selectedCovers[0] && selectedCovers[1]) { // Check if selectedCovers are defined
+                                selectedCovers[0].addTo(stage);
+                                selectedCovers[1].addTo(stage); 
+                                stage.update(); // Make sure to update the stage after adding the covers
+                            }
+                        }, 2);
+                        // selectedCovers[0].addTo(stage);
+                        // selectedCovers[1].addTo(stage);             
                     }
                     selectedCovers = [];
                     selectedCards = [];
@@ -200,6 +304,9 @@ function ready() {
         // If they match, keep them revealed
         // If they don't match, hide them again after a short delay
     }
+
+    // Function to check all unmatched cards during deck creation
+    
 
     // Function to check if two cards match
     function checkMatch(card1, card2) {
