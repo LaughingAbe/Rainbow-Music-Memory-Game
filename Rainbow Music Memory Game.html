@@ -25,7 +25,7 @@ function ready() {
 
     // checking for matches variables
     let selectedCards = [];
-    let selectedCovers = [];
+    
     let deck = [];
 
     let cards = [
@@ -125,6 +125,8 @@ function ready() {
         //     zog(unmatched);
 
         // }
+
+        let selectedCovers = [];
 
         // Create card elements using zimjs
         for (let i = 0; i < tileRows*tileColumns; i++){
@@ -239,10 +241,12 @@ function ready() {
             
             // Add event listener to cover to reveal the card temporarily
             cover.on("click", function() {
+                selectedCovers.push(cover);
+                selectedCards.push(randomCard);
                 if (selectedCards.length < 2) {
-                    selectedCards.push(randomCard);
+                    //selectedCards.push(randomCard);
                     //zog(selectedCards[0]);
-                    selectedCovers.push(cover);
+                    //selectedCovers.push(cover);
                     zog("Cover clicked: " + selectedCovers );
                     cover.removeFrom(stage); // Remove cover when clicked
                     zog("Cover removed");
@@ -252,10 +256,12 @@ function ready() {
                 //     cover.addTo(stage); // Restore cover after card is hidden
                 // }, 1); // Adjust the delay time as needed
                 // stage.update();
+                }
                 if (selectedCards.length == 2) {
+                    
                     zog("selectedCards.length == 2");
-                    zog(selectedCards[0]);
-                    zog(selectedCards[1]);
+                    zog(selectedCards[0] + " selectedCards[0]");
+                    zog(selectedCards[1]) + " selectedCards[1]";
                     if (selectedCards[0] == selectedCards[1]) {
                     //if (selectedCards[0].scaleNumber == selectedCards[1].scaleNumber) {
                         zog("selectedCards[0].scalenumber " + selectedCards[0].scaleNumber);
@@ -279,14 +285,14 @@ function ready() {
                                 stage.update(); // Make sure to update the stage after adding the covers
                             }
                         }, 2);
-                        // selectedCovers[0].addTo(stage);
-                        // selectedCovers[1].addTo(stage);             
+                        //selectedCovers[0].addTo(stage);
+                        //selectedCovers[1].addTo(stage);             
                     }
                     selectedCovers = [];
                     selectedCards = [];
                 }
                 stage.update();
-            }
+            
             } );
             
             // Add card and Label to the stage
